@@ -228,10 +228,11 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 System.out.println("decide type");
                 switch (type) {
                     case HPROF_UTF8: {
-                        System.out.println("it is hprof");
+                        System.out.println("it is hprof " + currPos);
                         long id = readID();
                         byte[] chars = new byte[(int)length - identifierSize];
                         in.readFully(chars);
+                        System.out.println(new String(chars));
                         names.put(new Long(id), new String(chars));
                         break;
                     }
@@ -304,7 +305,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_HEAP_DUMP_SEGMENT: {
-                        System.out.println("some heap segment");
+                        System.out.println("some heap segment " + currPos);
                         if (version >= VERSION_JDK6) {
                             if (dumpsToSkip <= 0) {
                                 try {
@@ -326,7 +327,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_FRAME: {
-                        System.out.println("frame");
+                        System.out.println("frame " + currPos);
                         if (stackFrames == null) {
                             skipBytes(length);
                         } else {
@@ -414,6 +415,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
         if(skippedErrorBytes>0){
             System.out.println("Hprof file is probably corrupted, " + skippedErrorBytes + " bytes had to be skipped");
         }
+        System.out.println("current position " + currPos);
         snapshot.skippedBytes = skippedErrorBytes;
         return snapshot;
     }
