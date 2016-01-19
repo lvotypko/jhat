@@ -199,6 +199,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 int type;
                 try {
                     type = in.readUnsignedByte();
+                    System.out.println("type is " + type);
                     if(type ==HPROF_HEAP_DUMP){
                     }
                     if(readCorruptedHprof){
@@ -375,12 +376,15 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
                     default: {
                         if(!readCorruptedHprof){
+                          System.out.println("corruption, but not allowed to read corrupted hprof");
                           skipBytes(length);
                           warn("Ignoring unrecognized record type " + type);
                         }
                         else{
                             //try to skip this byte
+                            
                             skippedErrorBytes ++;
+                            System.out.println("skill bytes " + skippedErrorBytes);
                             currPos = currPos - in.backOnMarkedPosition();
                         }
                     }
