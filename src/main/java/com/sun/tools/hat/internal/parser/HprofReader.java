@@ -199,7 +199,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 int type;
                 try {
                     type = in.readUnsignedByte();
-                    System.out.println("type is " + type + " and current position " + currPos);
+                   // System.out.println("type is " + type + " and current position " + currPos);
                     if(type ==HPROF_HEAP_DUMP){
                     }
                     if(readCorruptedHprof){
@@ -225,6 +225,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                                           + " of file.");
                 }
                 currPos += 9 + length;
+                System.out.println("decide type");
                 switch (type) {
                     case HPROF_UTF8: {
                         System.out.println("it is hprof");
