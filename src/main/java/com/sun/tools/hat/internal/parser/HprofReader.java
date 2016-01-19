@@ -199,7 +199,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 int type;
                 try {
                     type = in.readUnsignedByte();
-                    System.out.println("type is " + type);
+                    System.out.println("type is " + type + " and current position " + currPos);
                     if(type ==HPROF_HEAP_DUMP){
                     }
                     if(readCorruptedHprof){
@@ -210,7 +210,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     break;
                 }
                 int time = in.readInt();       // Timestamp of this record
-
+                System.out.println("readed time " + time);
                 // Length of record: readInt() will return negative value for record
                 // length >2GB.  so store 32bit value in long to keep it unsigned.
                 long length = in.readInt() & 0xffffffffL;
@@ -227,6 +227,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 currPos += 9 + length;
                 switch (type) {
                     case HPROF_UTF8: {
+                        System.out.println("it is hprof");
                         long id = readID();
                         byte[] chars = new byte[(int)length - identifierSize];
                         in.readFully(chars);
@@ -234,6 +235,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                         break;
                     }
                     case HPROF_LOAD_CLASS: {
+                        System.out.println("reading class " + currPos);
                         int serialNo = in.readInt();        // Not used
                         long classID = readID();
                         int stackTraceSerialNo = in.readInt();
@@ -248,6 +250,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_HEAP_DUMP: {
+                        System.out.println("real reading of dump " + currPos);
                         //pridane
                         if(in.available()<length){
                             //it is probably wrong
@@ -278,6 +281,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_HEAP_DUMP_END: {
+                        System.out.println("reading of dump finished" + currPos);
                         if (version >= VERSION_JDK6) {
                             if (dumpsToSkip <= 0) {
                                 skipBytes(length);  // should be no-op
@@ -299,6 +303,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_HEAP_DUMP_SEGMENT: {
+                        System.out.println("some heap segment");
                         if (version >= VERSION_JDK6) {
                             if (dumpsToSkip <= 0) {
                                 try {
@@ -320,6 +325,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_FRAME: {
+                        System.out.println("frame");
                         if (stackFrames == null) {
                             skipBytes(length);
                         } else {
@@ -342,6 +348,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                         break;
                     }
                     case HPROF_TRACE: {
+                        System.out.println("trace");
                         if (stackTraces == null) {
                             skipBytes(length);
                         } else {
@@ -371,10 +378,12 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     case HPROF_LOCKSTATS_HOLD_TIME:
                     {
                         // Ignore these record types
+                        System.out.println("not supported");
                         skipBytes(length);
                         break;
                     }
                     default: {
+                        System.out.println("default");
                         if(!readCorruptedHprof){
                           System.out.println("corruption, but not allowed to read corrupted hprof");
                           skipBytes(length);
