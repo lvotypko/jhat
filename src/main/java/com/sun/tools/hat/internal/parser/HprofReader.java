@@ -237,13 +237,18 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                         break;
                     }
                     case HPROF_LOAD_CLASS: {
-                        System.out.println("reading class " + currPos);
+                        System.out.print("reading class " + currPos);
                         int serialNo = in.readInt();        // Not used
+                        System.out.print(" serial number is " + serialNo);
                         long classID = readID();
+                        System.out.print(" classid is " + classID);
                         int stackTraceSerialNo = in.readInt();
+                        System.out.print(" stackTrace serial number " + stackTraceSerialNo);
                         long classNameID = readID();
+                        System.out.print(" classNameID " + classNameID + " possition is " + currPos);
                         Long classIdI = new Long(classID);
                         String nm = getNameFromID(classNameID).replace('/', '.');
+                        System.out.println("class name " + nm);
                         classNameFromObjectID.put(classIdI, nm);
                         if (classNameFromSerialNo != null) {
                             classNameFromSerialNo.put(new Integer(serialNo), nm);
@@ -254,6 +259,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     case HPROF_HEAP_DUMP: {
                         System.out.println("real reading of dump " + currPos);
                         //pridane
+                        System.out.println("available " + in.available());
                         if(in.available()<length){
                             //it is probably wrong
                             skippedErrorBytes ++;
@@ -451,8 +457,10 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
     }
 
     private void readHeapDump(long bytesLeft, long posAtEnd) throws IOException {
+        System.out.println("reading dump");
         while (bytesLeft > 0) {
             int type = in.readUnsignedByte();
+            System.out.println("type " + type);
             //pridano
             if(readCorruptedHprof){
                 in.mark();
