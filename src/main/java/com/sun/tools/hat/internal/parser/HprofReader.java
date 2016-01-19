@@ -463,7 +463,8 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
     private void readHeapDump(long bytesLeft, long posAtEnd) throws IOException {
         System.out.println("reading dump " + bytesLeft + " possition " + posAtEnd);
         System.out.println("hard size  " + 9000000000l);
-        while (bytesLeft > 9000000000l) {
+        bytesLeft = 9000000000l;
+        while (bytesLeft > 0) {
             int type = in.readUnsignedByte();
             System.out.println("type " + type);
             //pridano
