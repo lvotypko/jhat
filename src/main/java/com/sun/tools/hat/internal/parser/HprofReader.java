@@ -257,7 +257,8 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                     }
 
                     case HPROF_HEAP_DUMP: {
-                        System.out.println("real reading of dump " + currPos);
+                        System.out.println("real reading of dump " + currPos + " how it is with stack trace " + stackTraces.size() + " empty " + stackTraces.isEmpty());
+                        
                         //pridane
                         System.out.println("available " + in.available());
                         if(in.available()<length){
@@ -457,7 +458,7 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
     }
 
     private void readHeapDump(long bytesLeft, long posAtEnd) throws IOException {
-        System.out.println("reading dump");
+        System.out.println("reading dump " + bytesLeft + " possition " + posAtEnd);
         while (bytesLeft > 0) {
             int type = in.readUnsignedByte();
             System.out.println("type " + type);
