@@ -213,7 +213,10 @@ public class HprofReader extends Reader /* imports */ implements ArrayTypeCodes 
                 System.out.println("readed time " + time);
                 // Length of record: readInt() will return negative value for record
                 // length >2GB.  so store 32bit value in long to keep it unsigned.
-                long length = in.readInt() & 0xffffffffL;
+                long length = in.readInt();
+                System.out.println("whole lenght " + length);
+                length = length & 0xffffffffL;
+                System.out.println("lenght whole is " + length);
                 if (debugLevel > 0) {
                     System.out.println("Read record type " + type
                                        + ", length " + length
