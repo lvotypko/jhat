@@ -101,7 +101,7 @@ public class ReachableObjects {
             }
         });
         this.reachables = things;
-
+      
         this.totalSize = root.getSize();
         for (i = 0; i < things.length; i++) {
             this.totalSize += things[i].getSize();

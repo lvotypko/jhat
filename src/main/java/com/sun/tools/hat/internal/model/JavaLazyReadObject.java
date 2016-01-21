@@ -34,6 +34,7 @@ package com.sun.tools.hat.internal.model;
 
 import java.io.IOException;
 import com.sun.tools.hat.internal.parser.ReadBuffer;
+import java.util.List;
 
 /*
  * Base class for lazily read Java heap objects.
@@ -50,6 +51,23 @@ public abstract class JavaLazyReadObject extends JavaHeapObject {
     public final int getSize() {
         return getValueLength() + getClazz().getMinimumObjectSize();
     }
+    
+    public abstract long getTotalSize(List<JavaLazyReadObject> excludes);
+    
+//    public final long getTotalSize(JavaThing[] things, ReachableExcludes excludes){
+//        long size = getSize();
+//        for(JavaThing thing : things){
+//            if(thing instanceof JavaValue){
+//                size += thing.getSize();
+//            }
+//            if(thing instanceof JavaLazyReadObject){
+//                JavaLazyReadObject o = (JavaLazyReadObject) thing;
+//                ReachableObjects objs = new ReachableObjects(o,excludes);
+//                size += o.getTotalSize(objs.getReachables(), excludes);
+//            }
+//        }
+//        return size;
+//    }
 
     protected final long getOffset() {
         return offset;

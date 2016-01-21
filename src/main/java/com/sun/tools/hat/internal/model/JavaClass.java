@@ -36,6 +36,8 @@ import java.util.Vector;
 import java.util.Enumeration;
 import com.sun.tools.hat.internal.util.CompositeEnumeration;
 import com.sun.tools.hat.internal.parser.ReadBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -74,6 +76,8 @@ public class JavaClass extends JavaHeapObject {
     private int instanceSize;
     // Total number of fields including inherited ones
     private int totalNumFields;
+    
+    private long sizeCashed = 0l;
 
 
     public JavaClass(long id, String name, long superclassId, long loaderId,
@@ -398,6 +402,41 @@ public class JavaClass extends JavaHeapObject {
             result += t.getSize();
         }
         return result;
+    }
+    
+    public long getTotalInstanceSize(boolean ok){
+        if(sizeCashed>0){
+            return sizeCashed;
+        }
+        try{
+        
+        int count = instances.size();
+        if (count == 0 || !isArray()) {
+            return count * instanceSize;
+        }
+
+        // array class and non-zero count, we have to
+        // get the size of each instance and sum it
+        long result = 0;
+        List<JavaLazyReadObject> excludes = new ArrayList<JavaLazyReadObject>();
+        for (int i = 0; i < count; i++) {
+            JavaThing t = (JavaThing) instances.elementAt(i);
+            if(t instanceof JavaLazyReadObject){
+                JavaLazyReadObject jl = (JavaLazyReadObject) t;
+                result += jl.getTotalSize(excludes);
+            }
+            else{
+                result += t.getSize();
+            }
+            
+        }
+        sizeCashed = result;
+        return result;
+        }catch(Exception e){
+            e.printStackTrace(System.out);
+            return 0l;
+        }
+        
     }
 
     /**

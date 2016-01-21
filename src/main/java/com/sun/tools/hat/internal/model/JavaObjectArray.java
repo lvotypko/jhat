@@ -34,6 +34,7 @@ package com.sun.tools.hat.internal.model;
 
 import java.io.IOException;
 import com.sun.tools.hat.internal.parser.ReadBuffer;
+import java.util.List;
 
 /**
  * @author      Bill Foote
@@ -168,5 +169,28 @@ public class JavaObjectArray extends JavaLazyReadObject {
             buf.get(offset + 4 + idSize, res);
             return res;
         }
+    }
+
+    @Override
+    public long getTotalSize(List<JavaLazyReadObject> excludes) {
+        long size = getSize();
+        try{
+        for(JavaThing t : getElements()){
+            if(t==null || t.equals(this)){
+                continue;
+            }
+            if(t instanceof JavaLazyReadObject){
+                JavaLazyReadObject o = (JavaLazyReadObject) t;
+                size += o.getTotalSize(excludes);
+            }
+            else{
+                size += t.getSize();
+            }
+        }
+        }
+        catch(Exception e){
+            e.printStackTrace(System.out);
+        }
+        return size;
     }
 }

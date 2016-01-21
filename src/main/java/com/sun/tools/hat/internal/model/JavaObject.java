@@ -34,6 +34,7 @@ package com.sun.tools.hat.internal.model;
 
 import java.io.IOException;
 import com.sun.tools.hat.internal.parser.ReadBuffer;
+import java.util.List;
 
 /**
  * Represents Java instance
@@ -53,6 +54,31 @@ public class JavaObject extends JavaLazyReadObject {
     public JavaObject(long classID, long offset) {
         super(offset);
         this.clazz = makeId(classID);
+    }
+    
+    public long getTotalSize(List<JavaLazyReadObject> excludes){
+        if(excludes.contains(this))
+            return 0;
+        excludes.add(this);
+        long size = getSize();
+        try{
+        for(JavaThing t: getFields()){
+            if(t==null || t.equals(this)){
+                continue;
+            }
+            if(t instanceof JavaLazyReadObject){
+                JavaLazyReadObject obj = (JavaLazyReadObject) t;
+                size += obj.getTotalSize(excludes);
+            }
+            else{
+                size += t.getSize();
+            }
+        }
+        }
+        catch(Exception e){
+            e.printStackTrace(System.out);
+        }
+        return size;
     }
 
     public void resolve(Snapshot snapshot) {

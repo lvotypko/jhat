@@ -34,6 +34,7 @@ package com.sun.tools.hat.internal.model;
 
 import com.sun.tools.hat.internal.parser.ReadBuffer;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * An array of values, that is, an array of ints, boolean, floats or the like.
@@ -428,6 +429,13 @@ public class JavaValueArray extends JavaLazyReadObject
             result.append("}");
         }
         return result.toString();
+    }
+
+    @Override
+    public long getTotalSize(List<JavaLazyReadObject> excludes) {
+        long size = getSize();
+        size += getValue().length;
+        return size;
     }
 
 }

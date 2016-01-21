@@ -62,8 +62,8 @@ public class HistogramQuery extends QueryHandler {
             // default sort is by total size
             comparator = new Comparator<JavaClass>() {
                 public int compare(JavaClass first, JavaClass second) {
-                    long diff = (second.getTotalInstanceSize() -
-                             first.getTotalInstanceSize());
+                    long diff = (second.getTotalInstanceSize(true) -
+                             first.getTotalInstanceSize(true));
                     return (diff == 0)? 0: ((diff < 0)? -1 : + 1);
                 }
             };
@@ -89,7 +89,7 @@ public class HistogramQuery extends QueryHandler {
             out.println(clazz.getInstancesCount(false));
             out.println("</td>");
             out.println("<td>");
-            out.println(clazz.getTotalInstanceSize());
+            out.println(clazz.getTotalInstanceSize(true));
             out.println("</td></tr>");
         }
         out.println("</table>");
