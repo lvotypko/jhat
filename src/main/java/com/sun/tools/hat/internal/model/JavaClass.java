@@ -425,14 +425,15 @@ public class JavaClass extends JavaHeapObject {
             if(t instanceof JavaLazyReadObject){
                 JavaLazyReadObject jl = (JavaLazyReadObject) t;
                 result += jl.getTotalSize(excludes);
+                excludes.add(jl);
             }
             else{
                 result += t.getSize();
             }
+            System.out.println(" size is " + result);
             
         }
         sizeCashed = result;
-        System.out.println(" size is " + result);
         return result;
         }catch(Exception e){
             e.printStackTrace(System.out);

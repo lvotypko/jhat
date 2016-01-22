@@ -64,13 +64,23 @@ public class HistogramQuery extends QueryHandler {
             if(query.matches("\\d")){
                 calculation = Long.decode(query);
             }
-            comparator = new Comparator<JavaClass>() {
-                public int compare(JavaClass first, JavaClass second) {
-                    long diff = (second.getTotalInstanceSize(true) -
-                             first.getTotalInstanceSize(true));
-                    return (diff == 0)? 0: ((diff < 0)? -1 : + 1);
-                }
-            };
+            if(query.equals("total")){
+                comparator = new Comparator<JavaClass>() {
+                    public int compare(JavaClass first, JavaClass second) {
+                        long diff = (second.getTotalInstanceSize(true) -
+                                 first.getTotalInstanceSize(true));
+                        return (diff == 0)? 0: ((diff < 0)? -1 : + 1);
+                    }
+                };
+            }else{
+                comparator = new Comparator<JavaClass>() {
+                    public int compare(JavaClass first, JavaClass second) {
+                        long diff = (second.getTotalInstanceSize() -
+                                 first.getTotalInstanceSize());
+                        return (diff == 0)? 0: ((diff < 0)? -1 : + 1);
+                    }
+                };
+            }
         }
         Arrays.sort(classes, comparator);
 
@@ -94,7 +104,7 @@ public class HistogramQuery extends QueryHandler {
             out.println("</td>");
             out.println("<td>");
             if(i<calculation){
-            out.println(clazz.getTotalInstanceSize(true));
+                out.println(clazz.getTotalInstanceSize(true));
             }
             else{
                 out.println(clazz.getTotalInstanceSize());

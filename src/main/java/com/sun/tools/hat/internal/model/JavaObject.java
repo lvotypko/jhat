@@ -62,6 +62,7 @@ public class JavaObject extends JavaLazyReadObject {
         if(cashedSize>0){
             return cashedSize;
         }
+        System.out.println("size for " + this.getIdString());
         if(excludes.contains(this))
             return 0;
         excludes.add(this);
