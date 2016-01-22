@@ -408,6 +408,7 @@ public class JavaClass extends JavaHeapObject {
         if(sizeCashed>0){
             return sizeCashed;
         }
+        System.out.print("calculation instances size  for " + getName());
         try{
         
         int count = instances.size();
@@ -431,6 +432,7 @@ public class JavaClass extends JavaHeapObject {
             
         }
         sizeCashed = result;
+        System.out.println(" size is " + result);
         return result;
         }catch(Exception e){
             e.printStackTrace(System.out);

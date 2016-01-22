@@ -44,6 +44,7 @@ public class HistogramQuery extends QueryHandler {
     public void run() {
         JavaClass[] classes = snapshot.getClassesArray();
         Comparator<JavaClass> comparator;
+        long calculation = 0l;
         if (query.equals("count")) {
             comparator = new Comparator<JavaClass>() {
                 public int compare(JavaClass first, JavaClass second) {
@@ -60,6 +61,9 @@ public class HistogramQuery extends QueryHandler {
             };
         } else {
             // default sort is by total size
+            if(query.matches("\\d")){
+                calculation = Long.decode(query);
+            }
             comparator = new Comparator<JavaClass>() {
                 public int compare(JavaClass first, JavaClass second) {
                     long diff = (second.getTotalInstanceSize(true) -
@@ -89,7 +93,12 @@ public class HistogramQuery extends QueryHandler {
             out.println(clazz.getInstancesCount(false));
             out.println("</td>");
             out.println("<td>");
+            if(i<calculation){
             out.println(clazz.getTotalInstanceSize(true));
+            }
+            else{
+                out.println(clazz.getTotalInstanceSize());
+            }
             out.println("</td></tr>");
         }
         out.println("</table>");

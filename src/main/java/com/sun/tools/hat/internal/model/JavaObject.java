@@ -45,6 +45,8 @@ public class JavaObject extends JavaLazyReadObject {
 
     private Object clazz;       // Number before resolve
                                 // JavaClass after resolve
+    
+    private long cashedSize;
     /**
      * Construct a new JavaObject.
      *
@@ -57,6 +59,9 @@ public class JavaObject extends JavaLazyReadObject {
     }
     
     public long getTotalSize(List<JavaLazyReadObject> excludes){
+        if(cashedSize>0){
+            return cashedSize;
+        }
         if(excludes.contains(this))
             return 0;
         excludes.add(this);
@@ -78,6 +83,7 @@ public class JavaObject extends JavaLazyReadObject {
         catch(Exception e){
             e.printStackTrace(System.out);
         }
+        cashedSize=size;
         return size;
     }
 

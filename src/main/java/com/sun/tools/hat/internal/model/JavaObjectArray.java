@@ -42,6 +42,8 @@ import java.util.List;
 public class JavaObjectArray extends JavaLazyReadObject {
 
     private Object clazz;  // Long before resolve, the class after resolve
+    
+    private long cashedSize;
 
     public JavaObjectArray(long classID, long offset) {
         super(offset);
@@ -173,6 +175,9 @@ public class JavaObjectArray extends JavaLazyReadObject {
 
     @Override
     public long getTotalSize(List<JavaLazyReadObject> excludes) {
+        if(cashedSize>0){
+            return cashedSize;
+        }
         long size = getSize();
         try{
         for(JavaThing t : getElements()){
@@ -191,6 +196,7 @@ public class JavaObjectArray extends JavaLazyReadObject {
         catch(Exception e){
             e.printStackTrace(System.out);
         }
+        cashedSize=size;
         return size;
     }
 }
